@@ -14,7 +14,17 @@ class submodule_id:
 
 def import_submodule_objects():
     import json
-    with open("Configuration.json") as jsonFile:
+    
+    # Temporary Code
+    choice = input("Gyro(a) or light sensor(b)")
+    print(choice)
+    if (choice == "a"):
+        file = "GYRO_ACCEL.json"
+    else:
+        file = "LIGHT.json"
+    
+    
+    with open(file) as jsonFile:
         submodule = json.load(jsonFile)
 
     submodule_objects = {submodule_object['id']: submodule_id(submodule_object['id'],
