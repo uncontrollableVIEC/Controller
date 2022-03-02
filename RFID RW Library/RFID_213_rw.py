@@ -7,11 +7,12 @@ import pn532.pn532 as nfc
 from pn532 import *
 
 
-#pn532 = PN532_SPI(cs=4, reset=20, debug=False)
+# pn532 = PN532_SPI(cs=4, reset=20, debug=False)
 pn532 = PN532_I2C(debug=False, reset=20, req=16)
-#pn532 = PN532_UART(debug=False, reset=20)
+# pn532 = PN532_UART(debug=False, reset=20)
 
 def read_block6():
+    # Read block 6 of NTAG213
     ic, ver, rev, support = pn532.get_firmware_version()
     print('Found PN532 with firmware version: {0}.{1}'.format(ver, rev))
 
@@ -34,7 +35,8 @@ def read_block6():
     GPIO.cleanup()
 
 def write_block6(data):
-#data is byte array of length 4
+    # Write block 6 of NTAG213
+    # data is byte array of length 4
     assert data is not None and len(data) == 4, 'Data must be an array of 4 bytes!'
 
     # import RPi.GPIO as GPIO
@@ -78,5 +80,3 @@ def write_block6(data):
         print(e.errmsg)
     GPIO.cleanup()
 # Now just def a function in main to read block 6 or define function in pn532
-
-
