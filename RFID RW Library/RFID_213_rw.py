@@ -1,18 +1,17 @@
 """
-This example shows connecting to the PN532 and reading an NTAG213 of 180 bytes across 45 pages of 4 bytes
-type RFID tag
+This is a library for reading/writing to Block 6 of an RFID 213 tag
+213 Tags have 180 bytes of memory spread across 45 pages of 4 bytes
 """
-
 import RPi.GPIO as GPIO
-
 import pn532.pn532 as nfc
 from pn532 import *
+
 
 #pn532 = PN532_SPI(cs=4, reset=20, debug=False)
 pn532 = PN532_I2C(debug=False, reset=20, req=16)
 #pn532 = PN532_UART(debug=False, reset=20)
 
-def read_block6()
+def read_block6():
     ic, ver, rev, support = pn532.get_firmware_version()
     print('Found PN532 with firmware version: {0}.{1}'.format(ver, rev))
 
@@ -29,21 +28,21 @@ def read_block6()
             break
     print('Found card with UID:', [hex(i) for i in uid])
 
-    # But lets just look at page 6
+    # But let's just look at page 6
     print('Block 6: ', pn532.ntag2xx_read_block(6))
     return self.pn532.ntag2xx_read_block(6)
     GPIO.cleanup()
 
-def write_block6(data)
+def write_block6(data):
 #data is byte array of length 4
     assert data is not None and len(data) == 4, 'Data must be an array of 4 bytes!'
 
-    import RPi.GPIO as GPIO
-    import pn532.pn532 as nfc
-    from pn532 import *
+    # import RPi.GPIO as GPIO
+    # import pn532.pn532 as nfc
+    # from pn532 import *
 
     # pn532 = PN532_SPI(debug=False, reset=20, cs=4)
-    pn532 = PN532_I2C(debug=False, reset=20, req=16)
+    # pn532 = PN532_I2C(debug=False, reset=20, req=16)
     # pn532 = PN532_UART(debug=False, reset=20)
 
     ic, ver, rev, support = pn532.get_firmware_version()
@@ -65,8 +64,8 @@ def write_block6(data)
             break
     print('Found card with UID:', [hex(i) for i in uid])
 
-    #Set Block number = 6
-    block number = 6
+    # Set Block number = 6
+    block_number = 6
 
     try:
         pn532.ntag2xx_write_block(block_number, data)
