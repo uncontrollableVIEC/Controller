@@ -12,6 +12,16 @@ class submodule_id:
         self.measured_value = measured_value
         self.address = address
         self.io_value = io_value
+
+class output_obj:
+    def __init__(self, id, GPIO_pin, config_mode, tf_function, peak_voltage, io_value, measured_value):
+        self.id = id
+        self.GPIO_pin = GPIO_pin
+        self.config_mode = config_mode
+        self.tf_function = tf_function
+        self.peak_voltage: peak_voltage
+        self.io_value = io_value
+        self.measured_value = measured_value
         
 def convert_address(sub_obj):
     for i in sub_obj:
@@ -78,3 +88,44 @@ def print_data(sub_obj, r_index):
     sleep(6)
     print("\n")
     return 0
+
+def top_output_module(input_objs, output_objs):
+    # import output json
+    for i in range(output_objs.length):
+        index = config_output(input_objs, output_objs[i])
+        output_solution(input_objs[index], output_objs[i])
+    return 0
+
+def config_output(input_objs, output_obj):
+    for i in input_objs.length:
+        if (input_objs[i].measured_value == output_obj.measured_value):
+            return i
+    print ("JSON Measured_value not found")
+    return -1
+
+def output_solution(input_obj,output_obj):
+    import RPi.GPIO as GPIO
+    gpio_pin = 12  # PWM pin connected to LED
+    if (output_obj.config_mode == "PWM"):
+        GPIO.setwarnings(False)  # disable warnings
+        GPIO.setmode(GPIO.BOARD)  # set pin numbering system
+        GPIO.setup(gpio_pin, GPIO.OUT)
+        pi_pwm = GPIO.PWM(gpio_pin, 1000)  # create PWM instance with frequency
+        pi_pwm.start(0)
+
+        s = input_obj.io_value
+        duty = eval(output_obj.tf_function)
+        if (duty > 100):
+            duty = 100
+        if (duty < 0):
+            duty = 0
+        pi_pwm.ChangeDutyCycle(duty)
+
+    elif (output_obj.config_mode == "binary"):
+        GPIO.setmode(GPIO.BCM)
+        GPIO.setwarnings(False)
+        GPIO.setup(gpio_pin, GPIO.OUT)
+        if (input_obj.io_value > output_obj.setpoint):
+            GPIO.output(gpio_pin, GPIO.HIGH)
+        else:
+            GPIO.output(gpio_pin, GPIO.LOW)
