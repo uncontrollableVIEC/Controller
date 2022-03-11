@@ -1,11 +1,23 @@
 [
     {
       "id": 0,
+<<<<<<< HEAD
+      "GPIO_pin": "7",
+      "config_mode": "PWM_invert",
+      "high_input": "2000",
+      "low_input": "0",
+      "high_output": "100",
+      "low_output": "0",
+      "divider": "10",
+      "measured_value": "LUX",
+      "io_value": "0"
+=======
       "GPIO_Pin": 23,
       "config_mode": "PWM",
       "tf_function": "(value ",
       "peak_voltage": "3.3",
       "set_point": "(s / TBD_VALUE) * 100",
       "measured_value": "LUX"
+>>>>>>> c4862df5f80c5f81d13362150356a2c45c5124a8
   }
 ]

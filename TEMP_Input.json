@@ -1,0 +1,37 @@
+[
+  {
+    "id": 0,
+    "device_address": "0x38",
+    "config_type": "setup_32",
+    "measured_value": "PWR1",
+    "address": "0xE1",
+    "io_value": "8 0"
+  },
+  
+ {
+    "id": 1,
+    "device_address": "0x38",
+    "config_type": "read_32_initialize",
+    "measured_value": "Measure1",
+    "address": "0xAC",
+    "io_value": "51 0"
+  },
+  
+ {
+    "id": 2,
+    "device_address": "0x38",
+    "config_type": "read_16",
+    "measured_value": "TEMP",
+    "address": "0x00",
+    "io_value": "0"
+  },
+  
+ {
+    "id": 3,
+    "device_address": "0x38",
+    "config_type": "convertion",
+    "measured_value": "TEMP",
+    "address": "0x00",
+    "io_value": "1"
+  }
+]
