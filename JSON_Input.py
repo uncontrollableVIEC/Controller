@@ -24,6 +24,7 @@ class output_obj:
         self.measured_value = measured_value
         self.io_value = io_value
         self.input_index = 0
+        self.pi_pwm
         
    # def newAttr(self, attr):
      #   setattr(self, attr, attr)

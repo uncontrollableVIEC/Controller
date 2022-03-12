@@ -18,16 +18,17 @@ config = [0x08, 0x00]
 bus.write_i2c_block_data(0x38, 0xE1, config)
 time.sleep(0.5)
 byt = bus.read_byte(0x38)
-print(byt)
-print(byt&0x68)
 while 1:
     MeasureCmd = [0x33, 0x00]
     bus.write_i2c_block_data(0x38, 0xAC, MeasureCmd)
     time.sleep(0.5)
-    data = bus.read_i2c_block_data(0x38,0x00)
+    data = bus.read_i2c_block_data(0x38,0x07)
+    time.sleep(0.5)
+    print(bus.read_byte_data(0x38, 0x0F))
     print(data)
     #print(data)
     temp = ((data[3] & 0x0F) << 16) | (data[4] << 8) | data[5]
+    print(temp)
     ctemp = ((temp*200) / 1048576) - 50
     print(u'Temperature: {0:.1f}°C'.format(ctemp))
     tmp = ((data[1] << 16) | (data[2] << 8) | data[3]) >> 4

@@ -1,0 +1,27 @@
+[
+    {
+      "id": 0,
+      "GPIO_pin": "7",
+      "config_mode": "PWM_invert",
+      "high_input": "25",
+      "low_input": "22",
+      "high_output": "100",
+      "low_output": "0",
+      "divider": "10",
+      "measured_value": "TEMP",
+      "io_value": "0"
+  },
+    
+    {
+      "id": 1,
+      "GPIO_pin": "11",
+      "config_mode": "PWM",
+      "high_input": "28",
+      "low_input": "25",
+      "high_output": "100",
+      "low_output": "0",
+      "divider": "10",
+      "measured_value": "TEMP",
+      "io_value": "0"
+  }
+]

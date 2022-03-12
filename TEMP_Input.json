@@ -20,18 +20,18 @@
  {
     "id": 2,
     "device_address": "0x38",
-    "config_type": "read_16",
+    "config_type": "read_24_custom",
     "measured_value": "TEMP",
-    "address": "0x00",
+    "address": "0x03",
     "io_value": "0"
   },
   
  {
     "id": 3,
     "device_address": "0x38",
-    "config_type": "convertion",
+    "config_type": "conversion",
     "measured_value": "TEMP",
     "address": "0x00",
-    "io_value": "1"
+    "io_value": "((data*200) / 1048576) - 50"
   }
 ]
