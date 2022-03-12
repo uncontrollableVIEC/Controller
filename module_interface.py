@@ -70,14 +70,11 @@ def read_module(sub_obj, index):
             else:
                 value = ((data[0] & 0x0F) << 16) | (data[1] << 8) | data[2]
             sub_obj[index + i].io_value = value
+            
         elif "16" in sub_obj[index + i].config_type:
-            if (sub_obj[i].address == 0):
-                data = bus.read_i2c_block_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
-                value = (data[1] + (256 * data[0]))
-            else:
-                high = bus.read_byte_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
-                low = bus.read_byte_data(sub_obj[index + i].device_address, sub_obj[index + i].address + 1)
-                value = ((high << 8) | low)
+            # if (sub_obj[i].address == 0):
+            data = bus.read_i2c_block_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
+            value = (data[1] + (256 * data[0]))
 
             if value > 32768:
                 value = value - 65536
@@ -160,16 +157,22 @@ def output_solution(input_obj,output_obj):
     
     if ("digital" in output_obj.config_mode):
         if (input_obj.io_value > (output_obj.high_input - output_obj.low_input)/2):
-            GPIO.output(output_obj.GPIO_pin, GPIO.HIGH)
+            if ("invert" in output_obj.config_mode):
+                GPIO.output(output_obj.GPIO_pin, GPIO.LOW)
+            else:
+                GPIO.output(output_obj.GPIO_pin, GPIO.HIGH)
         else:
-            GPIO.output(output_obj.GPIO_pin, GPIO.LOW)
+            if ("invert" in output_obj.config_mode):
+                GPIO.output(output_obj.GPIO_pin, GPIO.HIGH)
+            else:
+                GPIO.output(output_obj.GPIO_pin, GPIO.LOW)
         return
+
     elif ("PWM" in output_obj.config_mode):
     
         input_step = (output_obj.high_input - output_obj.low_input) / output_obj.divider
         output_step = (output_obj.high_output - output_obj.low_output) / output_obj.divider
         multiple = int((input_obj.io_value - output_obj.low_input)/ input_step)
-        print(output_obj.io_value) 
         
         if ("invert" in output_obj.config_mode):
             output_obj.io_value = output_obj.high_output - output_step * multiple
@@ -181,8 +184,7 @@ def output_solution(input_obj,output_obj):
             
         if output_obj.io_value < output_obj.low_output:
             output_obj.io_value = output_obj.low_output
-            
-        print(output_obj.io_value)     
+                
         output_obj.pi_pwm.ChangeDutyCycle(int(output_obj.io_value))
         return
     
