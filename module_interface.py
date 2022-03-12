@@ -2,10 +2,8 @@
 # Created by: VIEC Team (Team 6)
 import smbus
 bus = smbus.SMBus(1)
-<<<<<<< HEAD
-=======
-from time import sleep 
->>>>>>> c4862df5f80c5f81d13362150356a2c45c5124a8
+
+from time import sleep
 
 class submodule_id:
     def __init__(self, id, device_address, config_type, measured_value, address, io_value):
@@ -17,7 +15,6 @@ class submodule_id:
         self.io_value = io_value
 
 class output_obj:
-<<<<<<< HEAD
     def __init__(self, id, GPIO_pin, config_mode, high_input, low_input, high_output, low_output, divider, measured_value, io_value):
         self.id = id
         self.GPIO_pin = GPIO_pin
@@ -30,7 +27,6 @@ class output_obj:
         self.measured_value = measured_value
         self.io_value = io_value
         self.input_index = 0
-=======
     def __init__(self, id, GPIO_pin, config_mode, tf_function, peak_voltage, io_value, measured_value):
         self.id = id
         self.GPIO_pin = GPIO_pin
@@ -39,7 +35,6 @@ class output_obj:
         self.peak_voltage: peak_voltage
         self.io_value = io_value
         self.measured_value = measured_value
->>>>>>> c4862df5f80c5f81d13362150356a2c45c5124a8
         
 def convert_address(sub_obj):
     for i in sub_obj:
@@ -49,7 +44,6 @@ def convert_address(sub_obj):
 
 
 def configure_module(sub_obj):
-<<<<<<< HEAD
     i  = 0 # Initialize the index
     convert_address(sub_obj)
     while "setup" in sub_obj[i].config_type:
@@ -58,12 +52,10 @@ def configure_module(sub_obj):
             sub_obj[i].io_value = [int(j) for j in sub_obj[i].io_value]
             bus.write_i2c_block_data(sub_obj[i].device_address, sub_obj[i].address, sub_obj[i].io_value)
         elif (sub_obj[i].address == 0):
-=======
     i = 0 # Initialize the index
     convert_address(sub_obj)
     while sub_obj[i].config_type == "setup":
         if (sub_obj[i].address == 0):
->>>>>>> c4862df5f80c5f81d13362150356a2c45c5124a8
             bus.write_byte(sub_obj[i].device_address, int(sub_obj[i].io_value,10))
         else:
             bus.write_byte_data(sub_obj[i].device_address, sub_obj[i].address, int(sub_obj[i].io_value,10))
@@ -74,7 +66,6 @@ def configure_module(sub_obj):
 def read_module(sub_obj, index):
     i = 0 # Initialize the index
     while "read" in sub_obj[index + i].config_type:
-<<<<<<< HEAD
         if "initialize" in sub_obj[index + i].config_type:
             if "8" not in sub_obj[index + i].config_type:
                 if type(sub_obj[index + i].io_value) == str:
@@ -94,11 +85,9 @@ def read_module(sub_obj, index):
                 print(sub_obj[index + i].address)
                 data = bus.read_i2c_block_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
                 print(data)
-=======
         if "16" in sub_obj[index + i].config_type:
             if (sub_obj[i].address == 0):
                 data = bus.read_i2c_block_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
->>>>>>> c4862df5f80c5f81d13362150356a2c45c5124a8
                 value = (data[1] + (256 * data[0]))
             else:
                 high = bus.read_byte_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
@@ -108,12 +97,9 @@ def read_module(sub_obj, index):
             if value > 32768:
                 value = value - 65536
             sub_obj[index + i].io_value = value
-            
-<<<<<<< HEAD
+
         elif ("8" in sub_obj[index + i].config_type):
-=======
         if ("8" in sub_obj[index + i].config_type):
->>>>>>> c4862df5f80c5f81d13362150356a2c45c5124a8
             value = bus.read_byte_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
             sub_obj[index + i].io_value = value
         i = i + 1
@@ -140,7 +126,6 @@ def convert_data(sub_obj, r_index):
 def print_data(sub_obj, r_index):
     for i in range(r_index,len(sub_obj)):
         print(sub_obj[i].measured_value + ": " + str(sub_obj[i].io_value))  #GYRO_X is printed for demonstration. Any variable can be printed
-<<<<<<< HEAD
     print("\n")
     return 0
 
@@ -221,7 +206,6 @@ def output_solution(input_obj,output_obj, pi_pwm):
         GPIO.output(output_obj.GPIO_pin, GPIO.LOW)
         return
 
-=======
     sleep(6)
     print("\n")
     return 0
@@ -266,4 +250,3 @@ def output_solution(input_obj,output_obj):
             GPIO.output(gpio_pin, GPIO.HIGH)
         else:
             GPIO.output(gpio_pin, GPIO.LOW)
->>>>>>> c4862df5f80c5f81d13362150356a2c45c5124a8
