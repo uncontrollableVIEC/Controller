@@ -5,11 +5,11 @@
 #libraries
 from time import sleep
 
-#from JSON_Input import input_submodule_objects
-#from JSON_Input import output_submodule_objects
+from JSON_Input import input_submodule_objects
+from JSON_Input import output_submodule_objects
 
-from JSON_INPUT_NO_CONNECTION import output_submodule_objects
-from JSON_INPUT_NO_CONNECTION import input_submodule_objects
+#from JSON_INPUT_NO_CONNECTION import output_submodule_objects
+#from JSON_INPUT_NO_CONNECTION import input_submodule_objects
 
 from module_interface import configure_module
 from module_interface import read_module
@@ -25,10 +25,10 @@ def main():
     # Identify module by scanning RFID
 
     # Download Respective .JSON File
-    RFID_value = "0000CCCC"
-    # submodule_objects, output_objects = Import_JSON_From_Server(RFID_value)
-    input_objects = input_submodule_objects()#submodule_objects
-    output_objects = output_submodule_objects()#output_objects
+    RFID_value = "0000BBBB"
+    input_objects, output_objects = Import_JSON_From_Server(RFID_value)
+    input_objects = input_submodule_objects(input_objects)#submodule_objects
+    output_objects = output_submodule_objects(output_objects)#output_objects
 
     # Configure module (turn on sensor)
     read_index = configure_module(input_objects)

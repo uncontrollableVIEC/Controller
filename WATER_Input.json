@@ -1,0 +1,28 @@
+[
+  {
+    "id": 0,
+    "device_address": "0x48",
+    "config_type": "setup_32",
+    "measured_value": "CONFIG",
+    "address": "0x01",
+    "io_value": "130 131"
+  },
+  
+ {
+    "id": 1,
+    "device_address": "0x48",
+    "config_type": "read_16",
+    "measured_value": "%",
+    "address": "0x00",
+    "io_value": "0"
+  },
+  
+ {
+    "id": 2,
+    "device_address": "0x48",
+    "config_type": "conversion",
+    "measured_value": "%",
+    "address": "0x00",
+    "io_value": "data"
+  }
+]

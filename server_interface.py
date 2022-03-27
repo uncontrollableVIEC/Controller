@@ -7,7 +7,7 @@ def Import_JSON_From_Server(RFID_value):
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
     # connect to 192.168.8.190, port 5000
-    server_address = ('192.168.8.205',5000)
+    server_address = ('192.168.10.1',5000)
     print ('connecting to %s port %s' %server_address)
     sock.connect(server_address)
     # sock.settimeout(5)
@@ -44,5 +44,5 @@ def Import_JSON_From_Server(RFID_value):
 #  finally:
     print ('Disconnecting...')
     sock.close()
-    # print ("data:\n" + inData.decode() + "\n")
+    print ("data:\n" + inData.decode() + "\n")
     return inData, outData;

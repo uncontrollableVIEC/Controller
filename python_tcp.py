@@ -4,7 +4,7 @@ def read_from_server():
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
     # connect to 192.168.8.190, port 5000
-    server_address = ('192.168.8.205',5000)
+    server_address = ('192.168.10.1',5000)
     print ('connecting to %s port %s' %server_address)
     sock.connect(server_address)
     sock.settimeout(5)
