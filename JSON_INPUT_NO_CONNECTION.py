@@ -30,7 +30,7 @@ class output_obj:
 def input_submodule_objects(): #submodule_objects
     import json
     
-    with open("WATER_Input.json") as jsonFile:
+    with open("DISTANCE_Input.json") as jsonFile:
         submodule = json.load(jsonFile)
     
 #     submodule_object = submodule_id()

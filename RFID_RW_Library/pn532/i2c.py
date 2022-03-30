@@ -38,7 +38,7 @@ from .pn532 import PN532, BusyError
 # pylint: disable=bad-whitespace
 # PN532 address without R/W bit, i.e. (0x48 >> 1)
 I2C_ADDRESS                    = 0x24
-I2C_CHANNEL                    = 1
+I2C_CHANNEL                    = 0
 
 # ctypes defines for i2c, see <linux/i2c-dev.h>
 I2C_SLAVE                      = 1795

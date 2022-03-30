@@ -74,6 +74,7 @@ def read_module(sub_obj, index):
         elif "16" in sub_obj[index + i].config_type:
             # if (sub_obj[i].address == 0):
             data = bus.read_i2c_block_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
+            print(data)
             value = (data[1] + (256 * data[0]))
 
             if value > 32768:
