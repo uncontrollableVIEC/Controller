@@ -21,7 +21,7 @@
     "id": 2,
     "device_address": "0x38",
     "config_type": "read_24_custom",
-    "measured_value": "PSRE",
+    "measured_value": "% HUMID",
     "address": "0x00",
     "io_value": "0"
   },
@@ -30,7 +30,7 @@
     "id": 3,
     "device_address": "0x38",
     "config_type": "conversion",
-    "measured_value": "PSRE",
+    "measured_value": "% HUMID",
     "address": "0x00",
     "io_value": "data * 100 / 1048576"
   }

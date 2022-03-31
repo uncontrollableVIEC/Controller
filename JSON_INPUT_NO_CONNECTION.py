@@ -27,10 +27,19 @@ class output_obj:
    # def newAttr(self, attr):
      #   setattr(self, attr, attr)
         
-def input_submodule_objects(): #submodule_objects
+def input_submodule_objects(RFID): #submodule_objects
     import json
     
-    with open("DISTANCE_Input.json") as jsonFile:
+    if (RFID == "AAAAAAAA"):
+        file = "LIGHT_Input.json"
+    elif (RFID == "BBBBBBBB"):
+        file = "TEMP_Input.json"
+    elif (RFID == "CCCCCCCC"):
+        file = "WATER_Input.json"
+    else:
+        file = "HUMID_Input.json"
+    
+    with open(file) as jsonFile:
         submodule = json.load(jsonFile)
     
 #     submodule_object = submodule_id()
@@ -45,11 +54,20 @@ def input_submodule_objects(): #submodule_objects
     return submodule_objects
 
 
-def output_submodule_objects(): #submodule_objects
+def output_submodule_objects(RFID): #submodule_objects
   #  setattr(output_obj, "input_index", 0)
     import json
     
-    with open("LIGHT_Output.json") as jsonFile:
+    if (RFID == "AAAAAAAA"):
+        file = "LIGHT_Output.json"
+    elif (RFID == "BBBBBBBB"):
+        file = "TEMP_Output.json"
+    elif (RFID == "CCCCCCCC"):
+        file = "WATER_Output.json"
+    else:
+        file = "HUMID_Output.json"
+    
+    with open(file) as jsonFile:
         submodule = json.load(jsonFile)
 
 #     submodule_object = output_obj()

@@ -13,7 +13,7 @@ pn532 = PN532_I2C(debug=False, reset=20, req=16)
 def read_block6():
     # Read block 6 of NTAG213
     ic, ver, rev, support = pn532.get_firmware_version()
-    print('Found PN532 with firmware version: {0}.{1}'.format(ver, rev))
+    #print('Found PN532 with firmware version: {0}.{1}'.format(ver, rev))
 
     # Configure PN532 to communicate with NTAG215 cards
     pn532.SAM_configuration()
@@ -29,7 +29,7 @@ def read_block6():
     # print('Found card with UID:', [hex(i) for i in uid])
 
     # But let's just look at page 6
-    # print('Block 6: ', pn532.ntag2xx_read_block(6))
+    #print('Block 6: ', pn532.ntag2xx_read_block(6))
     # return pn532.ntag2xx_read_block(6)
     return (['%02X' % x
         for x in pn532.ntag2xx_read_block(6)])

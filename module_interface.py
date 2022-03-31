@@ -39,52 +39,57 @@ def configure_module(sub_obj):
     i  = 0 # Initialize the index
     convert_address(sub_obj)
     while "setup" in sub_obj[i].config_type:
-        if ("32" in sub_obj[i].config_type):
-            sub_obj[i].io_value = sub_obj[i].io_value.split()
-            sub_obj[i].io_value = [int(j) for j in sub_obj[i].io_value]
-            bus.write_i2c_block_data(sub_obj[i].device_address, sub_obj[i].address, sub_obj[i].io_value)
-        elif (sub_obj[i].address == 0):
-            bus.write_byte(sub_obj[i].device_address, int(sub_obj[i].io_value,10))
-        else:
-            bus.write_byte_data(sub_obj[i].device_address, sub_obj[i].address, int(sub_obj[i].io_value,10))
-        i = i + 1
+        try:
+            if ("32" in sub_obj[i].config_type):
+                sub_obj[i].io_value = sub_obj[i].io_value.split()
+                sub_obj[i].io_value = [int(j) for j in sub_obj[i].io_value]
+                bus.write_i2c_block_data(sub_obj[i].device_address, sub_obj[i].address, sub_obj[i].io_value)
+            elif (sub_obj[i].address == 0):
+                bus.write_byte(sub_obj[i].device_address, int(sub_obj[i].io_value,10))
+            else:
+                bus.write_byte_data(sub_obj[i].device_address, sub_obj[i].address, int(sub_obj[i].io_value,10))
+            i = i + 1
+        except:
+            return -1
     return i
 
 
 def read_module(sub_obj, index):
     i = 0 # Initialize the index
     while "read" in sub_obj[index + i].config_type:
-        if "initialize" in sub_obj[index + i].config_type:
-            if "8" not in sub_obj[index + i].config_type:
-                if type(sub_obj[index + i].io_value) == str:
-                    sub_obj[index + i].io_value = sub_obj[index + i].io_value.split()
-                    sub_obj[index + i].io_value = [int(j) for j in sub_obj[index + i].io_value]
-                bus.write_i2c_block_data(sub_obj[index + i].device_address, sub_obj[index + i].address, sub_obj[index + i].io_value)
-            else:
-                bus.write_byte(sub_obj[i].device_address, int(sub_obj[i].io_value,10))
+        try:
+            if "initialize" in sub_obj[index + i].config_type:
+                if "8" not in sub_obj[index + i].config_type:
+                    if type(sub_obj[index + i].io_value) == str:
+                        sub_obj[index + i].io_value = sub_obj[index + i].io_value.split()
+                        sub_obj[index + i].io_value = [int(j) for j in sub_obj[index + i].io_value]
+                    bus.write_i2c_block_data(sub_obj[index + i].device_address, sub_obj[index + i].address, sub_obj[index + i].io_value)
+                else:
+                    bus.write_byte(sub_obj[i].device_address, int(sub_obj[i].io_value,10))
+                    
+            elif "24" in sub_obj[index + i].config_type:
+                data = bus.read_i2c_block_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
+                if "custom" in sub_obj[index + i].config_type:
+                    value = ((data[sub_obj[index + i].address] & 0x0F) << 16) | (data[sub_obj[index + i].address + 1] << 8) | data[sub_obj[index + i].address + 2]
+                else:
+                    value = ((data[0] & 0x0F) << 16) | (data[1] << 8) | data[2]
+                sub_obj[index + i].io_value = value
                 
-        elif "24" in sub_obj[index + i].config_type:
-            data = bus.read_i2c_block_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
-            if "custom" in sub_obj[index + i].config_type:
-                value = ((data[sub_obj[index + i].address] & 0x0F) << 16) | (data[sub_obj[index + i].address + 1] << 8) | data[sub_obj[index + i].address + 2]
-            else:
-                value = ((data[0] & 0x0F) << 16) | (data[1] << 8) | data[2]
-            sub_obj[index + i].io_value = value
-            
-        elif "16" in sub_obj[index + i].config_type:
-            # if (sub_obj[i].address == 0):
-            data = bus.read_i2c_block_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
-            print(data)
-            value = (data[1] + (256 * data[0]))
+            elif "16" in sub_obj[index + i].config_type:
+                # if (sub_obj[i].address == 0):
+                data = bus.read_i2c_block_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
+                value = (data[1] + (256 * data[0]))
 
-            if value > 32768:
-                value = value - 65536
-            sub_obj[index + i].io_value = value
+                if value > 32768:
+                    value = value - 65536
+                sub_obj[index + i].io_value = value
 
-        elif ("8" in sub_obj[index + i].config_type):
-            value = bus.read_byte_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
-            sub_obj[index + i].io_value = value
-        i = i + 1
+            elif ("8" in sub_obj[index + i].config_type):
+                value = bus.read_byte_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
+                sub_obj[index + i].io_value = value
+            i = i + 1
+        except:
+            return -1
         
     return sub_obj
 
@@ -185,7 +190,7 @@ def output_solution(input_obj,output_obj):
             
         if output_obj.io_value < output_obj.low_output:
             output_obj.io_value = output_obj.low_output
-                
+        print("DUTY: %d", int(output_obj.io_value))
         output_obj.pi_pwm.ChangeDutyCycle(int(output_obj.io_value))
         return
     

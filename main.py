@@ -5,6 +5,8 @@
 #libraries
 from time import sleep
 
+import RPi.GPIO as GPIO
+
 #from JSON_Input import input_submodule_objects
 #from JSON_Input import output_submodule_objects
 
@@ -33,28 +35,33 @@ def main():
     while 1:
         # Identify module by scanning RFID
         RFID_Value = read_block6()
+        RFID_Value = RFID_Value[0] + RFID_Value[1] + RFID_Value[2] + RFID_Value[3]
         print(RFID_Value)
 
         # Download Respective .JSON File
-        #RFID_value = "0000BBBB"
 
         #input_objects, output_objects = Import_JSON_From_Server(RFID_value)
-        input_objects = input_submodule_objects()#submodule_objects
+        input_objects = input_submodule_objects(RFID_Value)#submodule_objects
         if (len(input_objects) == 0):
             continue
-        output_objects = output_submodule_objects()#output_objects
+        output_objects = output_submodule_objects(RFID_Value)#output_objects
 
         # Configure module (turn on sensor)
         read_index = configure_module(input_objects)
+        if (read_index == -1): #Returns -1 when input is not connected
+            continue
 
-        #configure_output(input_objects, output_objects)
-
-        #GPIO_init(output_objects)
+        configure_output(input_objects, output_objects)
+        
+        GPIO.cleanup()
+        GPIO_init(output_objects)
         sleep(1)
 
         while 1: #for now
             # Read data from input module
             submodule_objects = read_module(input_objects, read_index)
+            if (submodule_objects == -1):
+                break
 
             # Convert data from digital to units
             submodule_objects = convert_data(input_objects, read_index)
@@ -63,9 +70,9 @@ def main():
             print_data(input_objects, read_index)
 
             # Control output module (Uncomment when testing output)
-            #organize_solution(submodule_objects, output_objects)
+            organize_solution(submodule_objects, output_objects)
 
-            sleep(.5)
+            sleep(2)
 
 
 if __name__ == "__main__":
