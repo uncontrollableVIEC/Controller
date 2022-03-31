@@ -30,39 +30,42 @@ def main():
     print("By: ECE 4336 Team 6")
     sleep(2)
     
-    
-    # Identify module by scanning RFID
-    RFID_Value = read_block6()
-    print(RFID_Value)
+    while 1:
+        # Identify module by scanning RFID
+        RFID_Value = read_block6()
+        print(RFID_Value)
 
-    # Download Respective .JSON File
-    #RFID_value = "0000BBBB"
-    #input_objects, output_objects = Import_JSON_From_Server(RFID_value)
-    input_objects = input_submodule_objects()#submodule_objects
-    output_objects = output_submodule_objects()#output_objects
+        # Download Respective .JSON File
+        #RFID_value = "0000BBBB"
 
-    # Configure module (turn on sensor)
-    read_index = configure_module(input_objects)
-    
-    #configure_output(input_objects, output_objects)
-    
-    #GPIO_init(output_objects)
-    sleep(1)
+        #input_objects, output_objects = Import_JSON_From_Server(RFID_value)
+        input_objects = input_submodule_objects()#submodule_objects
+        if (len(input_objects) == 0):
+            continue
+        output_objects = output_submodule_objects()#output_objects
 
-    while 1: #for now
-        # Read data from input module
-        submodule_objects = read_module(input_objects, read_index)
+        # Configure module (turn on sensor)
+        read_index = configure_module(input_objects)
 
-        # Convert data from digital to units
-        submodule_objects = convert_data(input_objects, read_index)
+        #configure_output(input_objects, output_objects)
 
-        # Print data
-        print_data(input_objects, read_index)
+        #GPIO_init(output_objects)
+        sleep(1)
 
-        # Control output module (Uncomment when testing output)
-        #organize_solution(submodule_objects, output_objects)
-        
-        sleep(.5)
+        while 1: #for now
+            # Read data from input module
+            submodule_objects = read_module(input_objects, read_index)
+
+            # Convert data from digital to units
+            submodule_objects = convert_data(input_objects, read_index)
+
+            # Print data
+            print_data(input_objects, read_index)
+
+            # Control output module (Uncomment when testing output)
+            #organize_solution(submodule_objects, output_objects)
+
+            sleep(.5)
 
 
 if __name__ == "__main__":
