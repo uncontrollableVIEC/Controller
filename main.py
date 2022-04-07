@@ -7,6 +7,8 @@ from time import sleep
 
 import RPi.GPIO as GPIO
 
+import drivers
+
 #from JSON_Input import input_submodule_objects
 #from JSON_Input import output_submodule_objects
 
@@ -27,9 +29,11 @@ import json
 
 def main():
     #Intro for VIEC Controller
+    display = drivers.Lcd()
     print ("VIEC Controller")
-    sleep(2)
+    display.lcd_display_string("VIEC Controller", 1)
     print("By: ECE 4336 Team 6")
+    display.lcd_display_string("By: ECE 4336 Team 6", 2)
     sleep(2)
     
     while 1:
