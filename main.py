@@ -4,16 +4,17 @@
 
 #libraries
 from time import sleep
+from time import time
 
 import RPi.GPIO as GPIO
 
 import drivers
 
-#from JSON_Input import input_submodule_objects
-#from JSON_Input import output_submodule_objects
+from JSON_Input import input_submodule_objects
+from JSON_Input import output_submodule_objects
 
-from JSON_INPUT_NO_CONNECTION import output_submodule_objects
-from JSON_INPUT_NO_CONNECTION import input_submodule_objects
+#from JSON_INPUT_NO_CONNECTION import output_submodule_objects
+#from JSON_INPUT_NO_CONNECTION import input_submodule_objects
 
 from RFID_RW_Library.RFID_213_rw import read_block6
 
@@ -37,22 +38,54 @@ def main():
     sleep(2)
     
     while 1:
+        start = time()
+        RFID_Value = "EMPTY"
+        
         # Identify module by scanning RFID
-        RFID_Value = read_block6()
-        RFID_Value = RFID_Value[0] + RFID_Value[1] + RFID_Value[2] + RFID_Value[3]
-        print(RFID_Value)
+        while (RFID_Value == "EMPTY"):
+            RFID_Value = read_block6()
+            now = time()
+            print(now)
+            if((now - start) > 5 and "EMPTY"):
+                display.lcd_clear()
+                display.lcd_display_string("ERROR: 0002", 1)
+                display.lcd_display_string("RFID NOT FOUND", 2)
+                break
+            if (RFID_Value == "EMPTY"):
+                continue
+            RFID_Value = RFID_Value[0] + RFID_Value[1] + RFID_Value[2] + RFID_Value[3]
+        
+        if (RFID_Value == "EMPTY"):
+            continue
+        
+        print(RFID_Value)  
 
         # Download Respective .JSON File
-
-        #input_objects, output_objects = Import_JSON_From_Server(RFID_value)
-        input_objects = input_submodule_objects(RFID_Value)#submodule_objects
+        
+        while 1: #Testing Server Connection
+            input_objects, output_objects = Import_JSON_From_Server(RFID_Value)
+            
+            if (input_objects == -1 and output_objects == -1):
+                display.lcd_clear()
+                display.lcd_display_string("ERROR: 0003", 1)
+                display.lcd_display_string("SERVER NOT FOUND", 2)
+                sleep(4)
+            else:
+                break
+        
+        input_objects = input_submodule_objects(input_objects)#submodule_objects
         if (len(input_objects) == 0):
             continue
-        output_objects = output_submodule_objects(RFID_Value)#output_objects
+        output_objects = output_submodule_objects(output_objects)#output_objects
 
         # Configure module (turn on sensor)
         read_index = configure_module(input_objects)
         if (read_index == -1): #Returns -1 when input is not connected
+            display.lcd_clear()
+            display.lcd_display_string("ERROR: 0001", 1)
+            display.lcd_display_string("DEFECTIVE I/O", 2)
+            sleep(4)
+            
             continue
 
         configure_output(input_objects, output_objects)

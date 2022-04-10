@@ -24,7 +24,9 @@ def read_block6():
         uid = pn532.read_passive_target(timeout=0.5)
         # print('.', end="")
         # Try again if no card is available.
-        if uid is not None:
+        if uid is None:
+            return "EMPTY"
+        else:
             break
     # print('Found card with UID:', [hex(i) for i in uid])
 

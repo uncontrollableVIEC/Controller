@@ -114,9 +114,11 @@ def convert_data(sub_obj, r_index):
 
 
 def print_data(sub_obj, r_index):
+    display.lcd_clear()
+    display.lcd_display_string("Sensor Value:", 1)
     for i in range(r_index,len(sub_obj)):
-        print(sub_obj[i].measured_value + ": " + str(sub_obj[i].io_value))  #GYRO_X is printed for demonstration. Any variable can be printed
-    print("\n")
+        display.lcd_display_string(str(sub_obj[i].io_value + " " + sub_obj[i].measured_value),2)  #GYRO_X is printed for demonstration. Any variable can be printed
+        sleep(1)
     return 0
 
 def configure_output(input_objs, output_objs):

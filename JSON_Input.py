@@ -35,7 +35,7 @@ def input_submodule_objects(submodule_objects): #submodule_objects
 #    with open("LIGHT_Input.json") as jsonFile:
 #        submodule = json.load(jsonFile)
     submodule = bytes(submodule_objects)
-    submodule = json.loads(submodule_objects)
+    submodule = json.loads(submodule)
     submodule_objects = {submodule_object['id']: submodule_id(submodule_object['id'],
                                                               submodule_object['device_address'], submodule_object['config_type'],
                                                               submodule_object['measured_value'],
@@ -52,7 +52,7 @@ def output_submodule_objects(submodule_objects): #submodule_objects
    #     submodule = json.load(jsonFile)
 
     submodule = bytes(submodule_objects)
-    submodule = json.loads(submodule_objects)
+    submodule = json.loads(submodule)
 
     submodule_objects = {submodule_object['id']: output_obj(submodule_object['id'],
                                                               submodule_object['GPIO_pin'],
