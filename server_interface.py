@@ -29,6 +29,8 @@ def Import_JSON_From_Server(RFID_value):
     bytes_received = 0
     total = sock.recv(256)
     total = int(total,10)
+    if total <= 0: #edited section!!!
+        return -1, -1
     while bytes_received < total:
         inData = inData + sock.recv(256)
         bytes_received = len(inData)
