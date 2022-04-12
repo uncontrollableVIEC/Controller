@@ -1,0 +1,27 @@
+[
+    {
+      "id": 0,
+      "GPIO_pin": "7",
+      "config_mode": "PWM_invert",
+      "high_input": "",
+      "low_input": "",
+      "high_output": "100",
+      "low_output": "0",
+      "divider": "10",
+      "measured_value": "TANK_LEVEL",
+      "io_value": "0"
+  },
+
+    {
+      "id": 1,
+      "GPIO_pin": "11",
+      "config_mode": "PWM",
+      "high_input": "",
+      "low_input": "",
+      "high_output": "100",
+      "low_output": "0",
+      "divider": "10",
+      "measured_value": "TANK_LEVEL",
+      "io_value": "0"
+  }
+]

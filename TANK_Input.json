@@ -1,6 +1,7 @@
 [
   {
     "id": 0,
+    "system_name": "Tank Level",
     "device_address": "0x48",
     "config_type": "setup_32",
     "measured_value": "CONFIG",
@@ -10,6 +11,7 @@
   
  {
     "id": 1,
+    "system_name": "Tank Level",
     "device_address": "0x48",
     "config_type": "read_16",
     "measured_value": "%",
@@ -19,6 +21,7 @@
   
  {
     "id": 2,
+    "system_name": "Tank Level",
     "device_address": "0x48",
     "config_type": "conversion",
     "measured_value": "%",

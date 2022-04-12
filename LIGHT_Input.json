@@ -1,6 +1,7 @@
 [
     {
     "id": 0,
+    "system_name": "Light",
     "device_address": "0x23",
     "config_type": "setup",
     "measured_value": "PWR",
@@ -11,6 +12,7 @@
       {
     "id": 1,
     "device_address": "0x23",
+    "system_name": "Light",
     "config_type": "read_16",
     "measured_value": "LUX",
     "address": "0x20",
@@ -19,6 +21,7 @@
 
       {
     "id": 2,
+    "system_name": "Light",
     "device_address": "0x23",
     "config_type": "conversion",
     "measured_value": "LUX",

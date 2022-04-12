@@ -1,6 +1,7 @@
 [
   {
     "id": 0,
+    "system_name": "Humidity",
     "device_address": "0x38",
     "config_type": "setup_32",
     "measured_value": "PWR1",
@@ -10,6 +11,7 @@
   
  {
     "id": 1,
+    "system_name": "Humidity",
     "device_address": "0x38",
     "config_type": "read_32_initialize",
     "measured_value": "Measure1",
@@ -19,6 +21,7 @@
   
  {
     "id": 2,
+    "system_name": "Humidity",
     "device_address": "0x38",
     "config_type": "read_24_custom",
     "measured_value": "% HUMID",
@@ -28,6 +31,7 @@
   
  {
     "id": 3,
+    "system_name": "Humidity",
     "device_address": "0x38",
     "config_type": "conversion",
     "measured_value": "% HUMID",

@@ -6,6 +6,8 @@
 from time import sleep
 from time import time
 
+from gpiozero import Button
+
 import RPi.GPIO as GPIO
 
 import drivers
@@ -26,9 +28,11 @@ from module_interface import configure_output
 from module_interface import organize_solution
 from module_interface import GPIO_init
 from server_interface import Import_JSON_From_Server
-import json
 
 def main():
+    #button = Button(pin #)
+
+
     #Intro for VIEC Controller
     display = drivers.Lcd()
     print ("VIEC Controller")
@@ -46,7 +50,23 @@ def main():
             RFID_Value = read_block6()
             now = time()
             print(now)
-            if((now - start) > 5 and "EMPTY"):
+            if (0): #Get rid of when barcode is implemented
+                #nothing
+            if ((now - start) > 20 and "EMPTY"):
+                #Barcode function
+                start_barcode = time()
+                display.lcd_clear()
+                display.lcd_display_string("Press button", 1)
+                display.lcd_display_string("to use barcode", 2)
+                while (time() - start_barcode > 3):
+                    if (1): #Replace with barGPIO
+                        # Barcode function
+                        display.lcd_clear()
+                        display.lcd_display_string("Activated", 1)
+                        display.lcd_display_string("Barcode Scanner", 2)
+                        sleep(1)
+                continue
+            elif ((now - start) > 5 and "EMPTY"):
                 display.lcd_clear()
                 display.lcd_display_string("ERROR: 0002", 1)
                 display.lcd_display_string("RFID NOT FOUND", 2)
@@ -94,6 +114,7 @@ def main():
         GPIO_init(output_objects)
         sleep(1)
 
+        display_index = 0 #initializing the display to show the first measured value
         while 1: #for now
             # Read data from input module
             submodule_objects = read_module(input_objects, read_index)
@@ -104,7 +125,7 @@ def main():
             submodule_objects = convert_data(input_objects, read_index)
 
             # Print data
-            print_data(input_objects, read_index)
+            display_index = print_data(input_objects, read_index, display, button, display_index)
 
             # Control output module (Uncomment when testing output)
             organize_solution(submodule_objects, output_objects)

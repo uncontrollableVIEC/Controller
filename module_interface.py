@@ -4,10 +4,13 @@ import smbus
 bus = smbus.SMBus(1)
 
 from time import sleep
+from time import time
+import drivers
 
 class submodule_id:
-    def __init__(self, id, device_address, config_type, measured_value, address, io_value):
+    def __init__(self, id, system_name, device_address, config_type, measured_value, address, io_value):
         self.id = id
+        self.system_name = system_name
         self.device_address = device_address
         self.config_type = config_type
         self.measured_value = measured_value
@@ -113,13 +116,27 @@ def convert_data(sub_obj, r_index):
     return sub_obj
 
 
-def print_data(sub_obj, r_index):
+def print_data(sub_obj, r_index, display, button, count):
     display.lcd_clear()
-    display.lcd_display_string("Sensor Value:", 1)
-    for i in range(r_index,len(sub_obj)):
-        display.lcd_display_string(str(sub_obj[i].io_value + " " + sub_obj[i].measured_value),2)  #GYRO_X is printed for demonstration. Any variable can be printed
-        sleep(1)
-    return 0
+    display.lcd_display_string(sub_obj[0].system_name + ":", 1)
+    if (button.is_pressed):
+        while(1):
+            start = time()
+            display.lcd_clear()
+            display.lcd_display_string("Choose value:", 1)
+            display.lcd_display_string(sub_obj[r_index + count].measured_value, 2)
+            if (time() - start > 3): #Wait at least 3 seconds to have user iterate through displays
+                return count
+            if (button.wait_for_press()):
+                count = count + 1
+                if (sub_obj[count].config_type == "conversion"):
+                    count = 0
+
+    display.lcd_clear()
+    display.lcd_display_string(sub_obj[0].system_name + ":", 1)
+    display.lcd_display_string(str(sub_obj[count].io_value + " " + sub_obj[count].measured_value), 2)
+    sleep(1)
+    return count
 
 def configure_output(input_objs, output_objs):
     for i in output_objs:

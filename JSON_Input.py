@@ -3,8 +3,9 @@
 
 
 class submodule_id:
-    def __init__(self, id, device_address, config_type, measured_value, address, io_value):
+    def __init__(self, id, system_name, device_address, config_type, measured_value, address, io_value):
         self.id = id
+        self.system_name = system_name
         self.device_address = device_address
         self.config_type = config_type
         self.measured_value = measured_value
@@ -26,9 +27,6 @@ class output_obj:
         self.input_index = 0
         self.pi_pwm = 0
         
-   # def newAttr(self, attr):
-     #   setattr(self, attr, attr)
-        
 def input_submodule_objects(submodule_objects): #submodule_objects
     import json
     
@@ -36,7 +34,7 @@ def input_submodule_objects(submodule_objects): #submodule_objects
 #        submodule = json.load(jsonFile)
     submodule = bytes(submodule_objects)
     submodule = json.loads(submodule)
-    submodule_objects = {submodule_object['id']: submodule_id(submodule_object['id'],
+    submodule_objects = {submodule_object['id']: submodule_id(submodule_object['id'], submodule_object['system_name'],
                                                               submodule_object['device_address'], submodule_object['config_type'],
                                                               submodule_object['measured_value'],
                                                               submodule_object['address'], submodule_object['io_value'])
