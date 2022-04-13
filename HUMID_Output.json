@@ -3,12 +3,12 @@
       "id": 0,
       "GPIO_pin": "7",
       "config_mode": "PWM_invert",
-      "high_input": "50",
+      "high_input": "65",
       "low_input": "0",
       "high_output": "100",
       "low_output": "0",
       "divider": "10",
-      "measured_value": "HUMIDITY",
+      "measured_value": "% HUMID",
       "io_value": "0"
   },
 
@@ -17,11 +17,11 @@
       "GPIO_pin": "11",
       "config_mode": "PWM",
       "high_input": "100",
-      "low_input": "50",
+      "low_input": "65",
       "high_output": "100",
       "low_output": "0",
       "divider": "10",
-      "measured_value": "HUMIDITY",
+      "measured_value": "% HUMID",
       "io_value": "0"
   }
 ]

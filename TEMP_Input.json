@@ -24,18 +24,38 @@
     "system_name": "Temperature",
     "device_address": "0x38",
     "config_type": "read_24_custom",
-    "measured_value": "TEMP",
+    "measured_value": "°C",
+    "address": "0x03",
+    "io_value": "0"
+  },
+  
+   {
+    "id": 3,
+    "system_name": "Temperature",
+    "device_address": "0x38",
+    "config_type": "read_24_custom",
+    "measured_value": "°F",
     "address": "0x03",
     "io_value": "0"
   },
   
  {
-    "id": 3,
+    "id": 4,
     "system_name": "Temperature",
     "device_address": "0x38",
     "config_type": "conversion",
-    "measured_value": "TEMP",
+    "measured_value": "°C",
     "address": "0x00",
     "io_value": "((data*200) / 1048576) - 50"
+  },
+  
+   {
+    "id": 5,
+    "system_name": "Temperature",
+    "device_address": "0x38",
+    "config_type": "conversion",
+    "measured_value": "°F",
+    "address": "0x00",
+    "io_value": "(((data*200) / 1048576) - 50) * 9/5 + 32"
   }
 ]

@@ -12,11 +12,11 @@ import RPi.GPIO as GPIO
 
 import drivers
 
-from JSON_Input import input_submodule_objects
-from JSON_Input import output_submodule_objects
+#from JSON_Input import input_submodule_objects
+#from JSON_Input import output_submodule_objects
 
-#from JSON_INPUT_NO_CONNECTION import output_submodule_objects
-#from JSON_INPUT_NO_CONNECTION import input_submodule_objects
+from JSON_INPUT_NO_CONNECTION import output_submodule_objects
+from JSON_INPUT_NO_CONNECTION import input_submodule_objects
 
 from RFID_RW_Library.RFID_213_rw import read_block6
 
@@ -30,7 +30,11 @@ from module_interface import GPIO_init
 from server_interface import Import_JSON_From_Server
 
 def main():
-    #button = Button(pin #)
+    #Reset and initialize GPIO
+    GPIO.cleanup()
+    GPIO.setwarnings(False)  # disable warnings
+    GPIO.setmode(GPIO.BOARD)  # set pin numbering system
+    button = Button(11)
 
 
     #Intro for VIEC Controller
@@ -40,18 +44,17 @@ def main():
     print("By: ECE 4336 Team 6")
     display.lcd_display_string("By: ECE 4336 Team 6", 2)
     sleep(2)
-    
     while 1:
         start = time()
         RFID_Value = "EMPTY"
         
         # Identify module by scanning RFID
         while (RFID_Value == "EMPTY"):
-            RFID_Value = read_block6()
+            try:
+                RFID_Value = read_block6()
+            except:
+                continue
             now = time()
-            print(now)
-            if (0): #Get rid of when barcode is implemented
-                #nothing
             if ((now - start) > 20 and "EMPTY"):
                 #Barcode function
                 start_barcode = time()
@@ -82,21 +85,22 @@ def main():
 
         # Download Respective .JSON File
         
-        while 1: #Testing Server Connection
-            input_objects, output_objects = Import_JSON_From_Server(RFID_Value)
+#         while 1: #Testing Server Connection
+#             input_objects, output_objects = Import_JSON_From_Server(RFID_Value)
+#             
+#             if (input_objects == -1 and output_objects == -1):
+#                 display.lcd_clear()
+#                 display.lcd_display_string("ERROR: 0003", 1)
+#                 display.lcd_display_string("SERVER NOT FOUND", 2)
+#                 sleep(4)
+#             else:
+#                 break
             
-            if (input_objects == -1 and output_objects == -1):
-                display.lcd_clear()
-                display.lcd_display_string("ERROR: 0003", 1)
-                display.lcd_display_string("SERVER NOT FOUND", 2)
-                sleep(4)
-            else:
-                break
-        
-        input_objects = input_submodule_objects(input_objects)#submodule_objects
+        #Interpret the json file 
+        input_objects = input_submodule_objects(RFID_Value)#submodule_objects
         if (len(input_objects) == 0):
             continue
-        output_objects = output_submodule_objects(output_objects)#output_objects
+        output_objects = output_submodule_objects(RFID_Value)#output_objects
 
         # Configure module (turn on sensor)
         read_index = configure_module(input_objects)
@@ -113,8 +117,12 @@ def main():
         GPIO.cleanup()
         GPIO_init(output_objects)
         sleep(1)
-
+        
         display_index = 0 #initializing the display to show the first measured value
+        
+        while "initialize" in input_objects[read_index + display_index].config_type: #Ignores the sensor initializations
+            display_index = display_index + 1
+            
         while 1: #for now
             # Read data from input module
             submodule_objects = read_module(input_objects, read_index)
@@ -130,7 +138,7 @@ def main():
             # Control output module (Uncomment when testing output)
             organize_solution(submodule_objects, output_objects)
 
-            sleep(2)
+            sleep(1)
 
 
 if __name__ == "__main__":

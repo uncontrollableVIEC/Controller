@@ -8,7 +8,7 @@
       "high_output": "100",
       "low_output": "0",
       "divider": "10",
-      "measured_value": "TEMP",
+      "measured_value": "°C",
       "io_value": "0"
   },
     
@@ -21,7 +21,7 @@
       "high_output": "100",
       "low_output": "0",
       "divider": "10",
-      "measured_value": "TEMP",
+      "measured_value": "°C",
       "io_value": "0"
   }
 ]

@@ -4,6 +4,7 @@ import smbus
 bus = smbus.SMBus(1)
 
 from time import sleep
+from sigfig import round
 from time import time
 import drivers
 
@@ -54,6 +55,8 @@ def configure_module(sub_obj):
             i = i + 1
         except:
             return -1
+   # while "initialize" in sub_obj[i].config_type: #Ignores the sensor initializations
+    #    i = i + 1
     return i
 
 
@@ -73,7 +76,7 @@ def read_module(sub_obj, index):
             elif "24" in sub_obj[index + i].config_type:
                 data = bus.read_i2c_block_data(sub_obj[index + i].device_address, sub_obj[index + i].address)
                 if "custom" in sub_obj[index + i].config_type:
-                    value = ((data[sub_obj[index + i].address] & 0x0F) << 16) | (data[sub_obj[index + i].address + 1] << 8) | data[sub_obj[index + i].address + 2]
+                    value = ((data[sub_obj[index + i].address] & 0x0F) << 16) | (data[sub_obj[index + i].address + 1] << 8) | data[sub_obj[index + i].address + 2] >> 4
                 else:
                     value = ((data[0] & 0x0F) << 16) | (data[1] << 8) | data[2]
                 sub_obj[index + i].io_value = value
@@ -110,6 +113,7 @@ def convert_data(sub_obj, r_index):
                 value = 0
                 data = float(sub_obj[r_index + r].io_value)
                 value = eval(sub_obj[c_index + c].io_value)
+                value = round(value, sigfigs = 6)
                 sub_obj[r_index + r].io_value = value
             c = c + 1
         r = r + 1
@@ -120,22 +124,30 @@ def print_data(sub_obj, r_index, display, button, count):
     display.lcd_clear()
     display.lcd_display_string(sub_obj[0].system_name + ":", 1)
     if (button.is_pressed):
+        start = time()
+        display.lcd_clear()
+        display.lcd_display_string("Choose value:", 1)
+        display.lcd_display_string(sub_obj[r_index + count].measured_value, 2)
         while(1):
-            start = time()
-            display.lcd_clear()
-            display.lcd_display_string("Choose value:", 1)
             display.lcd_display_string(sub_obj[r_index + count].measured_value, 2)
             if (time() - start > 3): #Wait at least 3 seconds to have user iterate through displays
                 return count
-            if (button.wait_for_press()):
+            if (button.is_pressed):
                 count = count + 1
-                if (sub_obj[count].config_type == "conversion"):
+                start = time()
+                if (sub_obj[r_index + count].config_type == "conversion"):
                     count = 0
+                    while "initialize" in sub_obj[r_index + count].config_type: #Ignores the sensor initializations
+                        count = count + 1 
+                display.lcd_clear()
+                display.lcd_display_string("Choose value:", 1)
+                display.lcd_display_string(sub_obj[r_index + count].measured_value, 2)
+                sleep(1)
 
     display.lcd_clear()
     display.lcd_display_string(sub_obj[0].system_name + ":", 1)
-    display.lcd_display_string(str(sub_obj[count].io_value + " " + sub_obj[count].measured_value), 2)
-    sleep(1)
+    display.lcd_display_string(str(sub_obj[r_index + count].io_value) + " " + sub_obj[r_index + count].measured_value, 2)
+    print(str(sub_obj[r_index + count].io_value) + " " + sub_obj[r_index + count].measured_value)
     return count
 
 def configure_output(input_objs, output_objs):
