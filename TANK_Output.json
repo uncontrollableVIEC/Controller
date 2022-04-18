@@ -2,13 +2,13 @@
     {
       "id": 0,
       "GPIO_pin": "7",
-      "config_mode": "PWM_invert",
-      "high_input": "100",
-      "low_input": "0",
-      "high_output": "100",
+      "config_mode": "digital",
+      "high_input": "4500",
+      "low_input": "1000",
+      "high_output": "0",
       "low_output": "0",
-      "divider": "10",
-      "measured_value": "%",
+      "divider": "0",
+      "measured_value": "WATER",
       "io_value": "0"
   }
 ]

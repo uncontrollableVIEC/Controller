@@ -171,9 +171,10 @@ def GPIO_init(output_objs):
     import RPi.GPIO as GPIO
     for i in output_objs:
         if ("digital" in output_objs[i].config_mode):
-            GPIO.setmode(GPIO.BCM)
+            GPIO.setwarnings(False)  # disable warnings
+            GPIO.setmode(GPIO.BOARD)
             GPIO.setwarnings(False)
-            GPIO.setup(output_obj[i].GPIO_pin, GPIO.OUT)
+            GPIO.setup(output_objs[i].GPIO_pin, GPIO.OUT)
             
         elif ("PWM" in output_objs[i].config_mode):
             GPIO.setwarnings(False)  # disable warnings

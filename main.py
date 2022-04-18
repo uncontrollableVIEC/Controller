@@ -12,11 +12,11 @@ import RPi.GPIO as GPIO
 
 import drivers
 
-#from JSON_Input import input_submodule_objects
-#from JSON_Input import output_submodule_objects
+from JSON_Input import input_submodule_objects
+from JSON_Input import output_submodule_objects
 
-from JSON_INPUT_NO_CONNECTION import output_submodule_objects
-from JSON_INPUT_NO_CONNECTION import input_submodule_objects
+#from JSON_INPUT_NO_CONNECTION import output_submodule_objects
+#from JSON_INPUT_NO_CONNECTION import input_submodule_objects
 
 from RFID_RW_Library.RFID_213_rw import read_block6
 
@@ -95,34 +95,35 @@ def main():
 
         # Download Respective .JSON File
         
-         while 1: #Testing Server Connection
-             start = time()
-             if (time() - startWIFI > 5):
-                 IPstring = '192.168.8.190'  # WIFI server IP
-                 input_objects, output_objects = Import_JSON_From_Server(RFID_Value, IPstring)
-                 if (input_objects == -1 and output_objects == -1):
-                     display.lcd_clear()
-                     display.lcd_display_string("ERROR: 0005", 1)
-                     display.lcd_display_string("WIFI SVR NOT FND", 2)
-                     sleep(4)
-                 else:
-                     break
-             else:
-                 IPstring = '192.168.10.1'  # LAN server IP
-                 input_objects, output_objects = Import_JSON_From_Server(RFID_Value, IPstring)
-                 if (input_objects == -1 and output_objects == -1):
-                     display.lcd_clear()
-                     display.lcd_display_string("ERROR: 0003", 1)
-                     display.lcd_display_string("LAN SVR NOT FND", 2)
-                     sleep(4)
-                 else:
-                     break
+        startWIFI = time()
+        while 1: #Testing Server Connection
+            if (time() - startWIFI > 5):
+                IPstring = "192.168.8.190"  # WIFI server IP
+                input_objects, output_objects = Import_JSON_From_Server(RFID_Value, IPstring)
+                if (input_objects == -1 and output_objects == -1):
+                    display.lcd_clear()
+                    display.lcd_display_string("ERROR: 0005", 1)
+                    display.lcd_display_string("WIFI SVR NOT FND", 2)
+                    sleep(2)
+                    startWIFI = time()
+                else:
+                    break
+            else:
+                IPstring = "192.168.10.1"  # LAN server IP
+                input_objects, output_objects = Import_JSON_From_Server(RFID_Value, IPstring)
+                if (input_objects == -1 and output_objects == -1):
+                    display.lcd_clear()
+                    display.lcd_display_string("ERROR: 0003", 1)
+                    display.lcd_display_string("LAN SVR NOT FND", 2)
+                    sleep(2)
+                else:
+                    break
             
         #Interpret the json file 
-        input_objects = input_submodule_objects(RFID_Value)#submodule_objects
+        input_objects = input_submodule_objects(input_objects)#submodule_objects
         if (len(input_objects) == 0):
             continue
-        output_objects = output_submodule_objects(RFID_Value)#output_objects
+        output_objects = output_submodule_objects(output_objects)#output_objects
 
         # Configure module (turn on sensor)
         read_index = configure_module(input_objects)

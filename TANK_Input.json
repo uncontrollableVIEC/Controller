@@ -14,7 +14,7 @@
     "system_name": "Tank Level",
     "device_address": "0x48",
     "config_type": "read_16",
-    "measured_value": "%",
+    "measured_value": "WATER",
     "address": "0x00",
     "io_value": "0"
   },
@@ -24,7 +24,7 @@
     "system_name": "Tank Level",
     "device_address": "0x48",
     "config_type": "conversion",
-    "measured_value": "%",
+    "measured_value": "WATER",
     "address": "0x00",
     "io_value": "data"
   }
