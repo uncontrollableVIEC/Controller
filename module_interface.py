@@ -7,6 +7,7 @@ from time import sleep
 from sigfig import round
 from time import time
 import drivers
+from reset_config import reset_Controller
 
 class submodule_id:
     def __init__(self, id, system_name, device_address, config_type, measured_value, address, io_value):
@@ -130,7 +131,9 @@ def print_data(sub_obj, r_index, display, button, count):
         display.lcd_display_string(sub_obj[r_index + count].measured_value, 2)
         while(1):
             display.lcd_display_string(sub_obj[r_index + count].measured_value, 2)
-            if (time() - start > 3): #Wait at least 3 seconds to have user iterate through displays
+            if (time() - start > 5): #Wait at least 3 seconds to have user iterate through displays
+                reset_Controller(display)
+            elif (time() - start > 3): #Wait at least 3 seconds to have user iterate through displays
                 return count
             if (button.is_pressed):
                 count = count + 1

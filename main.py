@@ -27,6 +27,8 @@ from module_interface import print_data
 from module_interface import configure_output
 from module_interface import organize_solution
 from module_interface import GPIO_init
+
+from reset_config import reset_Controller
 from server_interface import Import_JSON_From_Server
 
 def main():
@@ -50,6 +52,14 @@ def main():
         
         # Identify module by scanning RFID
         while (RFID_Value == "EMPTY"):
+
+            if (button.is_pressed): # User can reset system if RFID does not perform
+                start = time()
+                while (button.is_pressed):
+                    if (time() - start > 5):
+                        reset_Controller(display)
+
+
             try:
                 RFID_Value = read_block6()
             except:
@@ -111,6 +121,12 @@ def main():
             sleep(4)
             
             continue
+
+        if (button.is_pressed):  # User can reset system if Server does not perform
+            start = time()
+            while (button.is_pressed):
+                if (time() - start > 5):
+                    reset_Controller(display)
 
         configure_output(input_objects, output_objects)
         
