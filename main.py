@@ -95,16 +95,28 @@ def main():
 
         # Download Respective .JSON File
         
-#         while 1: #Testing Server Connection
-#             input_objects, output_objects = Import_JSON_From_Server(RFID_Value)
-#             
-#             if (input_objects == -1 and output_objects == -1):
-#                 display.lcd_clear()
-#                 display.lcd_display_string("ERROR: 0003", 1)
-#                 display.lcd_display_string("SERVER NOT FOUND", 2)
-#                 sleep(4)
-#             else:
-#                 break
+         while 1: #Testing Server Connection
+             start = time()
+             if (time() - startWIFI > 5):
+                 IPstring = '192.168.8.190'  # WIFI server IP
+                 input_objects, output_objects = Import_JSON_From_Server(RFID_Value, IPstring)
+                 if (input_objects == -1 and output_objects == -1):
+                     display.lcd_clear()
+                     display.lcd_display_string("ERROR: 0005", 1)
+                     display.lcd_display_string("WIFI SVR NOT FND", 2)
+                     sleep(4)
+                 else:
+                     break
+             else:
+                 IPstring = '192.168.10.1'  # LAN server IP
+                 input_objects, output_objects = Import_JSON_From_Server(RFID_Value, IPstring)
+                 if (input_objects == -1 and output_objects == -1):
+                     display.lcd_clear()
+                     display.lcd_display_string("ERROR: 0003", 1)
+                     display.lcd_display_string("LAN SVR NOT FND", 2)
+                     sleep(4)
+                 else:
+                     break
             
         #Interpret the json file 
         input_objects = input_submodule_objects(RFID_Value)#submodule_objects

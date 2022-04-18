@@ -1,13 +1,13 @@
 # Server Test Script
 
 import socket
-def Import_JSON_From_Server(RFID_value):
+def Import_JSON_From_Server(RFID_value,IPstring):
     #Connect
     # create socket
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
 
     # connect to 192.168.8.190, port 5000
-    server_address = ('192.168.10.1',5000)
+    server_address = (IPstring,5000)
     print ('connecting to %s port %s' %server_address)
     
     try:
