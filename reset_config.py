@@ -9,5 +9,5 @@ def reset_Controller(display):
     display.lcd_display_string("Controller will", 1)
     display.lcd_display_string("RESET", 2)
     sleep(3)
-    system("reboot")
+    os.system("sudo shutdown -r now")
     sys.exit()
