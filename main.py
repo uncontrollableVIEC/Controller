@@ -6,17 +6,15 @@
 from time import sleep
 from time import time
 
-from gpiozero import Button
-
 import RPi.GPIO as GPIO
 
 import drivers
 
-from JSON_Input import input_submodule_objects
-from JSON_Input import output_submodule_objects
+#from JSON_Input import input_submodule_objects
+#from JSON_Input import output_submodule_objects
 
-#from JSON_INPUT_NO_CONNECTION import output_submodule_objects
-#from JSON_INPUT_NO_CONNECTION import input_submodule_objects
+from JSON_INPUT_NO_CONNECTION import output_submodule_objects
+from JSON_INPUT_NO_CONNECTION import input_submodule_objects
 
 from RFID_RW_Library.RFID_213_rw import read_block6
 
@@ -28,19 +26,27 @@ from module_interface import configure_output
 from module_interface import organize_solution
 from module_interface import GPIO_init
 
-from reset_config import reset_Controller
 from server_interface import Import_JSON_From_Server
+
+from Button import button_pressed
 
 def main():
     #Reset and initialize GPIO
+    display = drivers.Lcd()
+    Button = 11
     GPIO.cleanup()
     GPIO.setwarnings(False)  # disable warnings
     GPIO.setmode(GPIO.BOARD)  # set pin numbering system
-    button = Button(11)
+    GPIO.setup(Button, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+    duration = 0
+    interval = [duration]
+    # Set up Button Interrupt Handler
+    GPIO.add_event_detect(Button, GPIO.FALLING, callback=button_pressed(GPIO, display, interval), bouncetime=100)
+
 
 
     #Intro for VIEC Controller
-    display = drivers.Lcd()
     print ("VIEC Controller")
     display.lcd_display_string("VIEC Controller", 1)
     print("By: ECE 4336 Team 6")
@@ -52,14 +58,6 @@ def main():
         
         # Identify module by scanning RFID
         while (RFID_Value == "EMPTY"):
-
-            if (button.is_pressed): # User can reset system if RFID does not perform
-                start = time()
-                while (button.is_pressed):
-                    if (time() - start > 5):
-                        reset_Controller(display)
-
-
             try:
                 RFID_Value = read_block6()
             except:
@@ -95,35 +93,35 @@ def main():
 
         # Download Respective .JSON File
         
-        startWIFI = time()
-        while 1: #Testing Server Connection
-            if (time() - startWIFI > 5):
-                IPstring = "192.168.8.190"  # WIFI server IP
-                input_objects, output_objects = Import_JSON_From_Server(RFID_Value, IPstring)
-                if (input_objects == -1 and output_objects == -1):
-                    display.lcd_clear()
-                    display.lcd_display_string("ERROR: 0005", 1)
-                    display.lcd_display_string("WIFI SVR NOT FND", 2)
-                    sleep(2)
-                    startWIFI = time()
-                else:
-                    break
-            else:
-                IPstring = "192.168.10.1"  # LAN server IP
-                input_objects, output_objects = Import_JSON_From_Server(RFID_Value, IPstring)
-                if (input_objects == -1 and output_objects == -1):
-                    display.lcd_clear()
-                    display.lcd_display_string("ERROR: 0003", 1)
-                    display.lcd_display_string("LAN SVR NOT FND", 2)
-                    sleep(2)
-                else:
-                    break
+        # startWIFI = time()
+        # while 1: #Testing Server Connection
+        #     if (time() - startWIFI > 5):
+        #         IPstring = "192.168.8.190"  # WIFI server IP
+        #         input_objects, output_objects = Import_JSON_From_Server(RFID_Value, IPstring)
+        #         if (input_objects == -1 and output_objects == -1):
+        #             display.lcd_clear()
+        #             display.lcd_display_string("ERROR: 0005", 1)
+        #             display.lcd_display_string("WIFI SVR NOT FND", 2)
+        #             sleep(2)
+        #             startWIFI = time()
+        #         else:
+        #             break
+        #     else:
+        #         IPstring = "192.168.10.1"  # LAN server IP
+        #         input_objects, output_objects = Import_JSON_From_Server(RFID_Value, IPstring)
+        #         if (input_objects == -1 and output_objects == -1):
+        #             display.lcd_clear()
+        #             display.lcd_display_string("ERROR: 0003", 1)
+        #             display.lcd_display_string("LAN SVR NOT FND", 2)
+        #             sleep(2)
+        #         else:
+        #             break
             
         #Interpret the json file 
-        input_objects = input_submodule_objects(input_objects)#submodule_objects
+        input_objects = input_submodule_objects(RFID_Value)#submodule_objects
         if (len(input_objects) == 0):
             continue
-        output_objects = output_submodule_objects(output_objects)#output_objects
+        output_objects = output_submodule_objects(RFID_Value)#output_objects
 
         # Configure module (turn on sensor)
         read_index = configure_module(input_objects)
@@ -134,12 +132,6 @@ def main():
             sleep(4)
             
             continue
-
-        if (button.is_pressed):  # User can reset system if Server does not perform
-            start = time()
-            while (button.is_pressed):
-                if (time() - start > 5):
-                    reset_Controller(display)
 
         configure_output(input_objects, output_objects)
         
@@ -162,7 +154,7 @@ def main():
             submodule_objects = convert_data(input_objects, read_index)
 
             # Print data
-            display_index = print_data(input_objects, read_index, display, button, display_index)
+            display_index = print_data(input_objects, read_index, display, interval, display_index)
 
             # Control output module (Uncomment when testing output)
             organize_solution(submodule_objects, output_objects)

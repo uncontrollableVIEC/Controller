@@ -121,23 +121,19 @@ def convert_data(sub_obj, r_index):
     return sub_obj
 
 
-def print_data(sub_obj, r_index, display, button, count):
+def print_data(sub_obj, r_index, display, interval, count):
     display.lcd_clear()
     display.lcd_display_string(sub_obj[0].system_name + ":", 1)
-    if (button.is_pressed):
-        start = time()
+    if (interval[0] > 0):
         display.lcd_clear()
         display.lcd_display_string("Choose value:", 1)
         display.lcd_display_string(sub_obj[r_index + count].measured_value, 2)
         while(1):
             display.lcd_display_string(sub_obj[r_index + count].measured_value, 2)
-            if (time() - start > 5): #Wait at least 3 seconds to have user iterate through displays
-                reset_Controller(display)
-            elif (time() - start > 3): #Wait at least 3 seconds to have user iterate through displays
+            if (interval[0] > 3): #Wait at least 3 seconds to have user iterate through displays
                 return count
-            if (button.is_pressed):
+            if (interval[0] > 0):
                 count = count + 1
-                start = time()
                 if (sub_obj[r_index + count].config_type == "conversion"):
                     count = 0
                     while "initialize" in sub_obj[r_index + count].config_type: #Ignores the sensor initializations
