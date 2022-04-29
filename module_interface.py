@@ -7,7 +7,7 @@ from time import sleep
 from sigfig import round
 from time import time
 import drivers
-from reset_config import reset_Controller
+import Constants
 
 class submodule_id:
     def __init__(self, id, system_name, device_address, config_type, measured_value, address, io_value):
@@ -121,18 +121,20 @@ def convert_data(sub_obj, r_index):
     return sub_obj
 
 
-def print_data(sub_obj, r_index, display, interval, count):
+def print_data(sub_obj, r_index, display, count):
     display.lcd_clear()
     display.lcd_display_string(sub_obj[0].system_name + ":", 1)
-    if (interval[0] > 0):
+    if (Constants.time_interval > 0):
+        start = time()
+        Constants.time_interval = 0
         display.lcd_clear()
         display.lcd_display_string("Choose value:", 1)
         display.lcd_display_string(sub_obj[r_index + count].measured_value, 2)
         while(1):
             display.lcd_display_string(sub_obj[r_index + count].measured_value, 2)
-            if (interval[0] > 3): #Wait at least 3 seconds to have user iterate through displays
+            if (time() - start > 3): #Wait at least 3 seconds to have user iterate through displays
                 return count
-            if (interval[0] > 0):
+            if (Constants.time_interval > 0):
                 count = count + 1
                 if (sub_obj[r_index + count].config_type == "conversion"):
                     count = 0
@@ -141,12 +143,13 @@ def print_data(sub_obj, r_index, display, interval, count):
                 display.lcd_clear()
                 display.lcd_display_string("Choose value:", 1)
                 display.lcd_display_string(sub_obj[r_index + count].measured_value, 2)
-                sleep(1)
+                Constants.time_interval = 0
 
     display.lcd_clear()
     display.lcd_display_string(sub_obj[0].system_name + ":", 1)
     display.lcd_display_string(str(sub_obj[r_index + count].io_value) + " " + sub_obj[r_index + count].measured_value, 2)
     print(str(sub_obj[r_index + count].io_value) + " " + sub_obj[r_index + count].measured_value)
+    Constants.time_interval = 0
     return count
 
 def configure_output(input_objs, output_objs):
@@ -167,22 +170,12 @@ def GPIO_init(output_objs):
     import RPi.GPIO as GPIO
     for i in output_objs:
         if ("digital" in output_objs[i].config_mode):
-            GPIO.setwarnings(False)  # disable warnings
-            GPIO.setmode(GPIO.BOARD)
-            GPIO.setwarnings(False)
             GPIO.setup(output_objs[i].GPIO_pin, GPIO.OUT)
             
         elif ("PWM" in output_objs[i].config_mode):
-            GPIO.setwarnings(False)  # disable warnings
-            GPIO.setmode(GPIO.BOARD)  # set pin numbering system
             GPIO.setup(output_objs[i].GPIO_pin, GPIO.OUT)
             output_objs[i].pi_pwm = GPIO.PWM(output_objs[i].GPIO_pin, 1000)
             output_objs[i].pi_pwm.start(0)
-        
-        else:
-            GPIO.setmode(GPIO.BCM)
-            GPIO.setwarnings(False)
-            GPIO.setup(output_obj[i].GPIO_pin, GPIO.OUT)
             
 def organize_solution(input_objs, output_objs):
     for i in output_objs:
@@ -221,7 +214,6 @@ def output_solution(input_obj,output_obj):
             
         if output_obj.io_value < output_obj.low_output:
             output_obj.io_value = output_obj.low_output
-        print("DUTY: %d", int(output_obj.io_value))
         output_obj.pi_pwm.ChangeDutyCycle(int(output_obj.io_value))
         return
     

@@ -5,6 +5,7 @@ def Import_JSON_From_Server(RFID_value,IPstring):
     #Connect
     # create socket
     sock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+    sock.settimeout(4)
 
     # connect to 192.168.8.190, port 5000
     server_address = (IPstring,5000)

@@ -3,11 +3,8 @@
 
 import os, sys
 from time import sleep
+import drivers
 
-def reset_Controller(display):
-    display.lcd_clear()
-    display.lcd_display_string("Controller will", 1)
-    display.lcd_display_string("RESET", 2)
-    sleep(3)
-    os.system("sudo shutdown -r now")
+def reset_VIEC_Controller():
+    os.system("sudo reboot")
     sys.exit()
